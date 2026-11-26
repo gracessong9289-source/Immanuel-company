@@ -633,7 +633,11 @@
       html += '<span class="lg"><i style="background:' + m.color + '"></i>' + m.label + '</span>';
     }
     document.getElementById('legend').innerHTML = html;
-    document.getElementById('mapCanvas').innerHTML = buildFloorSVG(f, ui.staffId);
+    var canvas = document.getElementById('mapCanvas');
+    var wrap = canvas ? canvas.parentNode : null;
+    var keepLeft = wrap ? wrap.scrollLeft : 0;
+    canvas.innerHTML = buildFloorSVG(f, ui.staffId);
+    if (wrap) { wrap.scrollLeft = keepLeft; }
     var cb = document.getElementById('clearSelect');
     if (cb) { cb.hidden = !ui.staffId; }
     document.getElementById('footSource').textContent =
@@ -980,6 +984,10 @@
     if (ui.draft) { ui.draft.staffId = ui.staffId; }
     renderStage();
     renderPanel();
+    if (ui.staffId && typeof window !== 'undefined' && window.innerWidth < 1220) {
+      var panel = document.querySelector('.panel');
+      if (panel && panel.scrollIntoView) { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    }
   }
 
   function bind() {
@@ -1020,7 +1028,7 @@
         ui.tab = 'approvals';
         renderPanel();
         var panel = document.querySelector('.panel');
-        if (panel && window.innerWidth < 1180) { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+        if (panel && window.innerWidth < 1220) { panel.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
       });
     }
 

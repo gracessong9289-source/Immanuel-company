@@ -899,7 +899,7 @@ code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
   .shell { gap: 14px; }
 }
 
-@media (max-width: 1120px) {
+@media (max-width: 1220px) {
   .shell { flex-wrap: wrap; }
   .sidebar { flex: 1 1 100%; }
   .stage { flex: 1 1 100%; order: 2; }
