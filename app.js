@@ -640,9 +640,10 @@
       (state.site.title || 'AI 오피스') + ' · ' + (state.updatedSource || '');
   }
 
-  function renderPanel() {
+  function renderPanel(keepScroll) {
     var body = document.getElementById('panelBody');
     if (!state) { return; }
+    var prevTop = (keepScroll && body) ? body.scrollTop : 0;
     var tabs = document.querySelectorAll('.tab');
     for (var i = 0; i < tabs.length; i++) {
       var on = tabs[i].getAttribute('data-tab') === ui.tab;
@@ -652,7 +653,7 @@
     if (ui.tab === 'approvals') { body.innerHTML = panelApprovals(); }
     else if (ui.tab === 'draft') { body.innerHTML = panelDraft(); }
     else { body.innerHTML = panelStatus(); }
-    body.scrollTop = 0;
+    body.scrollTop = prevTop;
   }
 
   function statRow(f) {
@@ -1043,7 +1044,7 @@
         var opt = t.closest ? t.closest('[data-opt]') : null;
         if (opt) {
           ui.options[opt.getAttribute('data-appr')] = parseInt(opt.getAttribute('data-opt'), 10) || 0;
-          renderPanel();
+          renderPanel(true);
           return;
         }
         var reset = t.closest ? t.closest('[data-draft-reset]') : null;
