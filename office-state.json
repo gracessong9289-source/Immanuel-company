@@ -898,7 +898,7 @@
       "id": "f1",
       "level": "1F",
       "name": "휴식 라운지",
-      "role": "반려견 케어 · 보류/대기 안건",
+      "role": "김봉순 · 보류/대기 안건",
       "theme": {
         "accent": "#c98a52",
         "soft": "#fbeedd",
@@ -991,8 +991,8 @@
       "staff": [
         {
           "id": "pet",
-          "name": "반려견 케어",
-          "pill": "반려견",
+          "name": "김봉순",
+          "pill": "김봉순",
           "role": "산책 · 미용 메모",
           "color": "#e0b48a",
           "hair": "#a98d6e",
