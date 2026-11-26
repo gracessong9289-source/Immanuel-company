@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>임마누엘컴퍼니 AI 오피스</title>
+<meta name="description" content="임마누엘컴퍼니의 자동화 루틴이 도는 5층 AI 오피스 현황판" />
+<meta name="theme-color" content="#f6f7fb" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23fff0f4'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle'%3E%F0%9F%8F%A2%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">🏢</span>
+    <div class="brand-text">
+      <h1>임마누엘컴퍼니 <span class="brand-sub">AI 오피스</span></h1>
+      <div class="brand-meta">
+        <span class="state-badge" id="stateBadge"><i aria-hidden="true"></i><span id="stateLabel">관측됨</span></span>
+        <span class="sep" aria-hidden="true">·</span>
+        <span class="updated" id="updatedLabel">마지막 업데이트 —</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar-right">
+    <div class="counts" id="counts" aria-label="전체 상태 집계"></div>
+    <button class="btn-primary" id="openApprovals" type="button">결재함 보기</button>
+  </div>
+</header>
+
+<main class="shell">
+
+  <aside class="sidebar" aria-label="층별 안내">
+    <div class="side-head">
+      <h2>층별 안내</h2>
+      <p>5개 층 · 자동화 루틴이 도는 자리</p>
+    </div>
+    <nav class="floor-list" id="floorList"></nav>
+    <div class="floor-card" id="floorCard"></div>
+    <p class="side-foot">업무 상태만 표시합니다.<br />고객 개인정보 · 계정 정보 · 금액은 담지 않아요.</p>
+  </aside>
+
+  <section class="stage" aria-label="오피스 지도">
+    <div class="stage-head">
+      <div class="stage-title">
+        <span class="stage-level" id="stageLevel">5F</span>
+        <h2 id="stageName">대표실 · 비서실</h2>
+      </div>
+      <p class="stage-line" id="stageLine"></p>
+      <div class="legend" id="legend"></div>
+    </div>
+
+    <div class="map-wrap">
+      <div class="map-canvas" id="mapCanvas" role="img" aria-label="층별 사무실 지도"></div>
+    </div>
+
+    <p class="map-hint">
+      직원을 누르면 오른쪽에 그 자리의 상세 현황이 열려요.
+      <button class="link-btn" id="clearSelect" type="button" hidden="hidden">층 전체 보기</button>
+    </p>
+  </section>
+
+  <aside class="panel" aria-label="현황 · 결재 · 지시">
+    <div class="tabs" role="tablist">
+      <button class="tab is-active" data-tab="status" role="tab" aria-selected="true" type="button">현황</button>
+      <button class="tab" data-tab="approvals" role="tab" aria-selected="false" type="button">결재 · 요청<span class="tab-count" id="tabApprovalCount">0</span></button>
+      <button class="tab" data-tab="draft" role="tab" aria-selected="false" type="button">지시 초안</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+</main>
+
+<footer class="foot">
+  <span id="footSource">임마누엘컴퍼니 AI 오피스 · 업무 상태 요약</span>
+  <span class="foot-note">상태 파일을 고치면 다음 접속에 바로 반영됩니다.</span>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
