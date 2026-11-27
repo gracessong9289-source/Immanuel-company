@@ -7,7 +7,7 @@
 <meta name="description" content="임마누엘컴퍼니 사옥 현황 — 6개 파트의 진행 상황을 한 화면에서" />
 <meta name="theme-color" content="#f3f4f6" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%231c2026'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial' font-size='30' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EI.%3C/text%3E%3C/svg%3E" />
-<link rel="stylesheet" href="styles.css?v=20261127b" />
+<link rel="stylesheet" href="styles.css?v=20261127-2" />
 </head>
 <body>
 
@@ -26,7 +26,7 @@
 
   <nav class="tabs" role="tablist" aria-label="화면 선택">
     <button class="tab is-active" role="tab" id="tab-office" aria-selected="true" aria-controls="view-office" data-view="office" type="button">오피스</button>
-    <button class="tab" role="tab" id="tab-meeting" aria-selected="false" aria-controls="view-meeting" data-view="meeting" type="button">회의실</button>
+    <button class="tab" role="tab" id="tab-approval" aria-selected="false" aria-controls="view-approval" data-view="approval" type="button">결재함<span class="tab-count" id="tabApprovalCount" hidden>7</span></button>
     <button class="tab" role="tab" id="tab-work" aria-selected="false" aria-controls="view-work" data-view="work" type="button">작업실</button>
     <button class="tab" role="tab" id="tab-status" aria-selected="false" aria-controls="view-status" data-view="status" type="button">현황</button>
     <button class="tab" role="tab" id="tab-memo" aria-selected="false" aria-controls="view-memo" data-view="memo" type="button">메모</button>
@@ -39,6 +39,10 @@
         <span class="tagline">Workspace</span>
         <h2 id="workspaceTitle">대표님, 6개 파트가 대기 중이에요</h2>
         <p id="workspaceText">공간이나 담당자를 탭하면 최근 진행 현황을 바로 볼 수 있어요.</p>
+        <button class="approval-cta" id="approvalShortcut" type="button" aria-controls="view-approval">
+          <span class="approval-cta-main">결재함 <b id="approvalShortcutCount">7</b>건 확인</span>
+          <span class="approval-cta-arrow" aria-hidden="true">→</span>
+        </button>
       </div>
 
       <div class="chips" id="chips">
@@ -59,10 +63,14 @@
       <p class="map-hint">핀이나 공간을 누르면 그 자리의 최근 현황이 열려요.</p>
     </section>
 
-    <section class="view" id="view-meeting" role="tabpanel" aria-labelledby="tab-meeting" hidden>
+    <section class="view" id="view-approval" role="tabpanel" aria-labelledby="tab-approval" hidden>
       <div class="view-head">
-        <h2>결재를 기다리는 안건</h2>
-        <p>버튼을 누르면 지시 문장이 복사돼요. 피클 대화창에 붙여 넣으면 바로 실행합니다.</p>
+        <h2>결재함</h2>
+        <p>대표님 확인을 기다리는 안건이에요. 선택지를 고르고 문장을 복사해 피클 대화창에 붙여 넣으면 바로 실행돼요.</p>
+      </div>
+      <div class="approval-bar">
+        <span class="approval-bar-count"><i aria-hidden="true"></i><b id="approvalBarCount">7</b>건 · 대표님 확인 대기</span>
+        <button class="mini" id="approvalCopyAll" type="button">전체 요약 복사</button>
       </div>
       <div class="stack" id="approvalList"></div>
     </section>
@@ -130,6 +138,6 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="app.js?v=20261127"></script>
+<script src="app.js?v=20261127-2"></script>
 </body>
 </html>

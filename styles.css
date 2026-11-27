@@ -162,9 +162,32 @@ body {
   color: var(--muted);
   letter-spacing: -0.02em;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   transition: color 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
   white-space: nowrap;
 }
+
+.tab-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--ink-soft);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.tab-count[hidden] { display: none; }
+
+.tab.is-active .tab-count { background: var(--ink-soft); color: #fff; }
 
 .tab.is-active {
   background: #fff;
@@ -434,6 +457,38 @@ button.chip { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
 .state.block, .state.miss { background: var(--red-soft); color: var(--red); }
 .state.idle { background: var(--line-soft); color: #7b8189; }
 
+/* approval shortcut (workspace card) */
+.approval-cta {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 0;
+  border-radius: 15px;
+  background: var(--ink-soft);
+  color: #fff;
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(20, 24, 30, 0.16);
+  transition: transform 0.14s ease, opacity 0.14s ease;
+}
+
+.approval-cta[hidden] { display: none; }
+.approval-cta:hover { opacity: 0.94; }
+.approval-cta:active { transform: scale(0.985); }
+.approval-cta-main b { font-weight: 800; }
+.approval-cta-arrow {
+  flex: none;
+  font-size: 15px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+}
 /* approval cards */
 .approval { padding: 17px 17px 16px; }
 
@@ -445,27 +500,35 @@ button.chip { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
 }
 
 .approval-team {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: var(--line-soft);
   font-size: 11.5px;
   font-weight: 800;
-  color: #7b8189;
+  color: #6c727a;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .approval-due {
+  margin: 7px 0 0;
   font-size: 11.5px;
   font-weight: 700;
-  color: var(--muted-2);
+  color: var(--amber);
+  letter-spacing: -0.01em;
 }
 
 .approval h3 {
-  margin: 8px 0 0;
+  margin: 10px 0 0;
   font-size: 16.5px;
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.4;
 }
 
-.approval p {
+.approval-why {
   margin: 7px 0 0;
   font-size: 13px;
   color: #6f757d;
@@ -486,11 +549,87 @@ button.chip { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
   font-weight: 700;
   letter-spacing: -0.02em;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
 .option:hover { background: var(--line-soft); border-color: #e2e4e8; }
 .option:active { background: #e9ebee; }
+
+.option.is-on {
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
+  color: #fff;
+}
+
+.prompt-box {
+  margin-top: 10px;
+  padding: 11px 13px;
+  border-radius: 13px;
+  background: #f7f8fa;
+  border: 1px solid var(--line-soft);
+}
+
+.prompt-text {
+  display: block;
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4d545c;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.approval-actions {
+  display: flex;
+  gap: 7px;
+  margin-top: 11px;
+}
+
+.approval-actions .btn {
+  padding: 10px 12px;
+  font-size: 12.5px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
+.approval-actions .btn-ghost { flex: none; }
+.approval-actions .btn-primary { flex: 1; }
+/* approval view bar */
+.approval-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: -6px;
+  padding: 9px 12px;
+  border-radius: 14px;
+  background: var(--amber-soft);
+}
+
+.approval-bar-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--amber);
+  letter-spacing: -0.01em;
+}
+
+.approval-bar-count i {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.approval-bar .mini {
+  background: #fff;
+  border-color: #f2e2c8;
+  color: var(--amber);
+  font-size: 11.5px;
+}
 
 /* stats */
 .stats {
@@ -844,6 +983,7 @@ button.chip { font: inherit; font-size: 13px; font-weight: 700; cursor: pointer;
   .app { padding: 18px 14px 32px; }
   .workspace h2 { font-size: 21px; }
   .brand-copy h1 { font-size: 19px; }
-  .tab { font-size: 12.5px; padding: 10px 0; }
+  .tab { font-size: 12.5px; padding: 10px 0; gap: 4px; }
+  .tab-count { min-width: 15px; height: 15px; padding: 0 3px; font-size: 10px; }
   .pin { font-size: 10px; padding: 5px 7px 5px 6px; gap: 4px; }
 }

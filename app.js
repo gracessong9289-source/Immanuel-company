@@ -18,6 +18,11 @@
     mapImage: document.getElementById('mapImage'),
     pins: document.getElementById('pins'),
     approvalList: document.getElementById('approvalList'),
+    approvalShortcut: document.getElementById('approvalShortcut'),
+    approvalShortcutCount: document.getElementById('approvalShortcutCount'),
+    approvalCopyAll: document.getElementById('approvalCopyAll'),
+    approvalBarCount: document.getElementById('approvalBarCount'),
+    tabApprovalCount: document.getElementById('tabApprovalCount'),
     routineList: document.getElementById('routineList'),
     statGrid: document.getElementById('statGrid'),
     updateList: document.getElementById('updateList'),
@@ -112,6 +117,8 @@
     var src = (state.map && state.map.image) || 'assets/office-3d.png';
     el.mapImage.src = src;
     if (state.map && state.map.alt) el.mapImage.alt = state.map.alt;
+
+    renderApprovalBadges();
   }
 
   /* ---------- render: pins ---------- */
@@ -133,37 +140,114 @@
     });
   }
 
-  /* ---------- render: meeting / approvals ---------- */
+  /* ---------- render: 결재함 / approvals ---------- */
+
+  var approvalPick = {};
+
+  function renderApprovalBadges() {
+    var count = (state.approvals || []).length;
+    if (el.tabApprovalCount) {
+      el.tabApprovalCount.textContent = String(count);
+      el.tabApprovalCount.hidden = count === 0;
+    }
+    if (el.approvalShortcutCount) el.approvalShortcutCount.textContent = String(count);
+    if (el.approvalBarCount) el.approvalBarCount.textContent = String(count);
+    if (el.approvalShortcut) el.approvalShortcut.hidden = count === 0;
+  }
+
+  function approvalSummaryText() {
+    var list = state.approvals || [];
+    var lines = ['[결재함] 대표님 확인 대기 ' + list.length + '건', ''];
+    list.forEach(function (item, index) {
+      lines.push((index + 1) + '. ' + item.team + ' — ' + item.title);
+      lines.push('    선택지: ' + (item.options || []).map(function (o) { return o.label; }).join(' / '));
+    });
+    lines.push('');
+    lines.push('안건마다 선택지를 골라 문장을 복사해 붙여 넣으면 바로 실행돼요.');
+    return lines.join('\n');
+  }
 
   function renderApprovals() {
+    var list = state.approvals || [];
     el.approvalList.innerHTML = '';
-    (state.approvals || []).forEach(function (item) {
+
+    if (!list.length) {
+      var empty = document.createElement('div');
+      empty.className = 'card empty';
+      empty.textContent = '지금은 대표님 확인을 기다리는 안건이 없어요.';
+      el.approvalList.appendChild(empty);
+      renderApprovalBadges();
+      return;
+    }
+
+    list.forEach(function (item) {
+      var options = item.options || [];
+      var picked = approvalPick[item.id] || 0;
+      if (picked < 0 || picked > options.length - 1) picked = 0;
+
       var card = document.createElement('article');
       card.className = 'card approval';
       card.innerHTML =
         '<div class="approval-top">' +
           '<span class="approval-team">' + esc(item.team) + '</span>' +
-          '<span class="approval-due">' + esc(item.tone || '') + '</span>' +
+          '<span class="state wait">대표님 확인 대기</span>' +
         '</div>' +
         '<h3>' + esc(item.title) + '</h3>' +
-        '<p>' + esc(item.why) + '</p>' +
-        '<div class="options" role="group" aria-label="지시 문장 복사"></div>';
+        '<p class="approval-why">' + esc(item.why) + '</p>' +
+        (item.due ? '<p class="approval-due">' + esc(item.tone ? item.tone + ' · ' : '') + esc(item.due) + '</p>' : '') +
+        '<div class="options" role="group" aria-label="선택지"></div>' +
+        '<div class="prompt-box"><code class="prompt-text"></code></div>' +
+        '<div class="approval-actions">' +
+          '<button class="btn btn-ghost" type="button" data-act="copy-options">선택지 복사</button>' +
+          '<button class="btn btn-primary" type="button" data-act="copy-pick">피클에 보낼 문구 복사</button>' +
+        '</div>';
 
       var holder = card.querySelector('.options');
-      (item.options || []).forEach(function (option) {
+      var promptText = card.querySelector('.prompt-text');
+
+      function pickedText() {
+        var option = options[picked];
+        return option ? option.text : '';
+      }
+
+      function paint() {
+        Array.prototype.forEach.call(holder.children, function (btn, index) {
+          var on = index === picked;
+          btn.classList.toggle('is-on', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        promptText.textContent = pickedText();
+      }
+
+      options.forEach(function (option, index) {
         var btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'option';
         btn.textContent = option.label;
-        btn.title = option.text;
         btn.addEventListener('click', function () {
-          copyText(option.text, '지시 문장을 복사했어요');
+          picked = index;
+          approvalPick[item.id] = index;
+          paint();
         });
         holder.appendChild(btn);
+      });
+      paint();
+
+      card.querySelector('[data-act="copy-options"]').addEventListener('click', function () {
+        var text = options.map(function (option, index) {
+          return (index + 1) + ') ' + option.label + ' — ' + option.text;
+        }).join('\n');
+        copyText(text, '선택지 ' + options.length + '개를 복사했어요');
+      });
+
+      card.querySelector('[data-act="copy-pick"]').addEventListener('click', function () {
+        copyText(pickedText(), '피클에 보낼 문구를 복사했어요 — 대화창에 붙여 넣으세요');
       });
 
       el.approvalList.appendChild(card);
     });
+
+    renderApprovalBadges();
   }
 
   /* ---------- render: work / routines ---------- */
@@ -322,6 +406,25 @@
 
   var initial = (location.hash || '').replace('#', '');
   if (initial && document.getElementById('view-' + initial)) activate(initial, false);
+
+  /* ---------- 결재함 바로가기 ---------- */
+
+  if (el.approvalShortcut) {
+    el.approvalShortcut.addEventListener('click', function () {
+      activate('approval', true);
+    });
+  }
+
+  if (el.approvalCopyAll) {
+    el.approvalCopyAll.addEventListener('click', function () {
+      var count = state && state.approvals ? state.approvals.length : 0;
+      if (!count) {
+        toast('지금은 결재 대기 안건이 없어요');
+        return;
+      }
+      copyText(approvalSummaryText(), '결재 요약을 복사했어요 — 대화창에 붙여 넣으세요');
+    });
+  }
 
   /* ---------- motion toggle ---------- */
 
