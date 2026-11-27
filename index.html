@@ -3,80 +3,130 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>임마누엘컴퍼니 AI 오피스</title>
-<meta name="description" content="임마누엘컴퍼니의 자동화 루틴이 도는 5층 AI 오피스 현황판" />
-<meta name="theme-color" content="#f6f7fb" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23fff0f4'/%3E%3Ctext x='32' y='45' font-size='36' text-anchor='middle'%3E%F0%9F%8F%A2%3C/text%3E%3C/svg%3E" />
+<title>임마누엘컴퍼니 · 송블리 본부</title>
+<meta name="description" content="임마누엘컴퍼니 사옥 현황 — 6개 파트의 진행 상황을 한 화면에서" />
+<meta name="theme-color" content="#f3f4f6" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%231c2026'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial' font-size='30' font-weight='700' fill='%23ffffff' text-anchor='middle'%3EI.%3C/text%3E%3C/svg%3E" />
 <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
-<header class="topbar">
-  <div class="brand">
-    <span class="brand-mark" aria-hidden="true">🏢</span>
-    <div class="brand-text">
-      <h1>임마누엘컴퍼니 <span class="brand-sub">AI 오피스</span></h1>
-      <div class="brand-meta">
-        <span class="state-badge" id="stateBadge"><i aria-hidden="true"></i><span id="stateLabel">관측됨</span></span>
-        <span class="sep" aria-hidden="true">·</span>
-        <span class="updated" id="updatedLabel">마지막 업데이트 —</span>
+<div class="app" id="app">
+
+  <header class="app-head">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">I.</span>
+      <div class="brand-copy">
+        <h1>임마누엘컴퍼니</h1>
+        <p id="brandSub">송블리 본부 · 6개 파트 가동 중</p>
       </div>
     </div>
-  </div>
+    <span class="live"><i aria-hidden="true"></i>LIVE</span>
+  </header>
 
-  <div class="topbar-right">
-    <div class="counts" id="counts" aria-label="전체 상태 집계"></div>
-    <button class="btn-primary" id="openApprovals" type="button">결재함 보기</button>
-  </div>
-</header>
+  <nav class="tabs" role="tablist" aria-label="화면 선택">
+    <button class="tab is-active" role="tab" id="tab-office" aria-selected="true" aria-controls="view-office" data-view="office" type="button">오피스</button>
+    <button class="tab" role="tab" id="tab-meeting" aria-selected="false" aria-controls="view-meeting" data-view="meeting" type="button">회의실</button>
+    <button class="tab" role="tab" id="tab-work" aria-selected="false" aria-controls="view-work" data-view="work" type="button">작업실</button>
+    <button class="tab" role="tab" id="tab-status" aria-selected="false" aria-controls="view-status" data-view="status" type="button">현황</button>
+    <button class="tab" role="tab" id="tab-memo" aria-selected="false" aria-controls="view-memo" data-view="memo" type="button">메모</button>
+  </nav>
 
-<main class="shell">
+  <main class="views" id="views">
 
-  <aside class="sidebar" aria-label="층별 안내">
-    <div class="side-head">
-      <h2>층별 안내</h2>
-      <p>5개 층 · 자동화 루틴이 도는 자리</p>
-    </div>
-    <nav class="floor-list" id="floorList"></nav>
-    <div class="floor-card" id="floorCard"></div>
-    <p class="side-foot">업무 상태만 표시합니다.<br />고객 개인정보 · 계정 정보 · 금액은 담지 않아요.</p>
-  </aside>
-
-  <section class="stage" aria-label="오피스 지도">
-    <div class="stage-head">
-      <div class="stage-title">
-        <span class="stage-level" id="stageLevel">5F</span>
-        <h2 id="stageName">대표실 · 비서실</h2>
+    <section class="view is-active" id="view-office" role="tabpanel" aria-labelledby="tab-office">
+      <div class="card workspace">
+        <span class="tagline">Workspace</span>
+        <h2 id="workspaceTitle">대표님, 6개 파트가 대기 중이에요</h2>
+        <p id="workspaceText">공간이나 담당자를 탭하면 최근 진행 현황을 바로 볼 수 있어요.</p>
       </div>
-      <p class="stage-line" id="stageLine"></p>
-      <div class="legend" id="legend"></div>
+
+      <div class="chips" id="chips">
+        <button class="chip chip-solid" id="motionToggle" type="button" aria-pressed="true">
+          <span class="chip-dot" aria-hidden="true"></span><span id="motionLabel">모션 ON</span>
+        </button>
+        <span class="chip">가동 6파트</span>
+        <span class="chip">송블리</span>
+      </div>
+
+      <div class="map-card">
+        <div class="map" id="map">
+          <img id="mapImage" src="assets/office-3d.png" alt="임마누엘컴퍼니 사옥 3D 도면" width="1100" height="1075" />
+          <div class="pins" id="pins"></div>
+        </div>
+      </div>
+
+      <p class="map-hint">핀이나 공간을 누르면 그 자리의 최근 현황이 열려요.</p>
+    </section>
+
+    <section class="view" id="view-meeting" role="tabpanel" aria-labelledby="tab-meeting" hidden>
+      <div class="view-head">
+        <h2>결재를 기다리는 안건</h2>
+        <p>버튼을 누르면 지시 문장이 복사돼요. 피클 대화창에 붙여 넣으면 바로 실행합니다.</p>
+      </div>
+      <div class="stack" id="approvalList"></div>
+    </section>
+
+    <section class="view" id="view-work" role="tabpanel" aria-labelledby="tab-work" hidden>
+      <div class="view-head">
+        <h2>자동으로 도는 루틴</h2>
+        <p>정해 둔 시간에 알아서 움직이고, 결과만 여기에 쌓여요.</p>
+      </div>
+      <div class="card list-card" id="routineList"></div>
+    </section>
+
+    <section class="view" id="view-status" role="tabpanel" aria-labelledby="tab-status" hidden>
+      <div class="view-head">
+        <h2>오늘의 현황</h2>
+        <p id="updatedLine">11월 27일 21:45 기준</p>
+      </div>
+      <div class="stats" id="statGrid"></div>
+
+      <h3 class="section-title">11월 27일 업데이트</h3>
+      <div class="card timeline" id="updateList"></div>
+
+      <h3 class="section-title">다음 일정</h3>
+      <div class="card list-card" id="scheduleList"></div>
+
+      <p class="foot-note" id="footNote">업무 상태만 표시합니다. 이름 · 연락처 · 계정 · 금액 같은 개인 정보는 담지 않아요.</p>
+    </section>
+
+    <section class="view" id="view-memo" role="tabpanel" aria-labelledby="tab-memo" hidden>
+      <div class="view-head">
+        <h2>메모 · 지시</h2>
+        <p>떠오른 일을 적어 두면 여기에 남아요. 복사해서 대화창에 붙여 넣으면 바로 시킬 수 있어요.</p>
+      </div>
+
+      <div class="card memo-compose">
+        <label class="sr-only" for="memoInput">메모 내용</label>
+        <textarea id="memoInput" rows="3" placeholder="예) 내일 오전에 리틀리 프로필 채우기"></textarea>
+        <div class="memo-actions">
+          <button class="btn btn-primary" id="memoCopy" type="button">복사해서 피클에 보내기</button>
+          <button class="btn btn-ghost" id="memoSave" type="button">저장</button>
+        </div>
+      </div>
+
+      <h3 class="section-title">저장한 메모</h3>
+      <div class="stack" id="memoList"></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+  <div class="sheet-panel">
+    <div class="sheet-grip" aria-hidden="true"></div>
+    <div class="sheet-head">
+      <div>
+        <p class="sheet-role" id="sheetRole">총괄 · 일정 · 결재</p>
+        <h2 id="sheetTitle">지휘실</h2>
+      </div>
+      <button class="sheet-close" id="sheetClose" type="button" aria-label="닫기">✕</button>
     </div>
-
-    <div class="map-wrap">
-      <div class="map-canvas" id="mapCanvas" role="img" aria-label="층별 사무실 지도"></div>
-    </div>
-
-    <p class="map-hint">
-      직원을 누르면 오른쪽에 그 자리의 상세 현황이 열려요.
-      <button class="link-btn" id="clearSelect" type="button" hidden="hidden">층 전체 보기</button>
-    </p>
-  </section>
-
-  <aside class="panel" aria-label="현황 · 결재 · 지시">
-    <div class="tabs" role="tablist">
-      <button class="tab is-active" data-tab="status" role="tab" aria-selected="true" type="button">현황</button>
-      <button class="tab" data-tab="approvals" role="tab" aria-selected="false" type="button">결재 · 요청<span class="tab-count" id="tabApprovalCount">0</span></button>
-      <button class="tab" data-tab="draft" role="tab" aria-selected="false" type="button">지시 초안</button>
-    </div>
-    <div class="panel-body" id="panelBody"></div>
-  </aside>
-
-</main>
-
-<footer class="foot">
-  <span id="footSource">임마누엘컴퍼니 AI 오피스 · 업무 상태 요약</span>
-  <span class="foot-note">상태 파일을 고치면 다음 접속에 바로 반영됩니다.</span>
-</footer>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</section>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
